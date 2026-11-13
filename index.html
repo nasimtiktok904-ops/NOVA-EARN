@@ -153,5 +153,47 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 function copyReferral(){const el=document.getElementById('refLink');if(!el.value||el.value.includes('প্রয়োজন')){toast('Referral link পেতে Backend সংযোগ প্রয়োজন।');return;}navigator.clipboard?.writeText(el.value).then(()=>toast('লিংক কপি হয়েছে।')).catch(()=>toast('কপি করা যায়নি।'));}
 function taskFilter(category,btn){document.querySelectorAll('#tasks .tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}
 </script>
+  <script>
+(async function () {
+  const tg = window.Telegram?.WebApp;
+  if (!tg) return;
+
+  tg.ready();
+  tg.expand();
+
+  const initData = tg.initData;
+  if (!initData) {
+    console.log("Telegram-এর ভিতর থেকে Mini App খুলুন");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "https://nmnltjrrcwzdftsusbrz.supabase.co/functions/v1/telegram-auth",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ initData })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.verified) {
+      console.error("Telegram Login verification failed");
+      return;
+    }
+
+    window.novaTelegramUser = result.user;
+    window.novaIsAdmin = result.is_admin;
+
+    console.log("Telegram Login successful", result.user);
+  } catch (error) {
+    console.error("Login connection failed");
+  }
+})();
+  </script>
 </body>
 </html>
