@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<title>NOVA EARN — Telegram Mini App</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#090909;--surface:#151515;--surface2:#1d1d1d;--line:#34302a;--gold:#d8ad50;--gold2:#f1d48b;--white:#fff;--muted:#aaa;--green:#4bc58a;--red:#e47777;--yellow:#e8bb58}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding-bottom:94px}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:560px;margin:auto;min-height:100vh}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;background:rgba(9,9,9,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.brand{font-weight:950;letter-spacing:1.5px;font-size:21px;color:var(--gold)}.brand span{color:#fff}.header-right{display:flex;align-items:center;gap:9px}.icon-btn,.avatar{width:39px;height:39px;border:1px solid var(--line);border-radius:50%;background:var(--surface2);color:var(--gold);display:grid;place-items:center}.avatar{font-weight:800}
+main{padding:17px}.page{display:none;animation:fade .18s ease}.page.active{display:block}@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--gold);font-weight:800;text-transform:uppercase}.page-title{font-size:23px;font-weight:850;margin:6px 0 16px}.muted{color:var(--muted)}.small{font-size:12px}.gold{color:var(--gold)}.white{color:#fff}
+.hero{border:1px solid #80652f;border-radius:22px;padding:21px;background:radial-gradient(circle at 90% 0%,#5b451d66,transparent 45%),linear-gradient(135deg,#272014,#121212 60%,#090909);box-shadow:0 12px 35px #0008}
+.hero-top{display:flex;justify-content:space-between;align-items:center}.pill{font-size:10px;padding:6px 9px;border-radius:30px;background:#d8ad5020;color:var(--gold2);border:1px solid #8d713a}.balance-label{color:#d8c79f;font-size:12px;margin-top:19px}.balance-value{font-size:35px;font-weight:900;letter-spacing:.3px;color:var(--gold2);margin:5px 0 3px}.hero-foot{font-size:11px;color:#c5b58f}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0}.stat,.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px}.stat-label{font-size:11px;color:var(--muted)}.stat-value{font-size:21px;color:var(--gold2);font-weight:850;margin-top:7px}.section-head{display:flex;align-items:center;justify-content:space-between;margin:23px 0 12px}.section-head h3{font-size:16px;margin:0}.text-btn{border:0;background:none;color:var(--gold);font-size:12px;font-weight:800;padding:5px}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.quick{display:flex;align-items:center;gap:11px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:14px;color:#fff}.quick .qicon{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:#d8ad5019;font-size:19px}.quick b{display:block;font-size:13px}.quick small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.notice{padding:12px 13px;border-radius:12px;background:#d8ad5010;border:1px solid #725a2d;color:#d9c28d;font-size:11px;line-height:1.5;margin:12px 0}
+.list{display:grid;gap:10px}.list-row{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);padding:13px;border-radius:14px}.list-icon{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;background:#d8ad5018;border-radius:12px;font-size:19px}.list-main{flex:1;min-width:0}.list-main b{font-size:13px;display:block}.list-main small{font-size:11px;color:var(--muted);display:block;margin-top:4px;overflow-wrap:anywhere}.reward{font-size:12px;color:var(--gold2);font-weight:800;white-space:nowrap}
+.btn{border:0;border-radius:11px;padding:12px 15px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#17120a;font-weight:850;font-size:12px}.btn:disabled{opacity:.45;cursor:not-allowed}.btn-outline{border:1px solid #80652f;background:transparent;color:var(--gold2);border-radius:11px;padding:11px 14px;font-weight:750;font-size:12px}.btn-dark{background:#292929;color:#fff;border:1px solid #444}.btn-danger{background:#4a2222;color:#ffcaca;border:1px solid #743838}.full{width:100%}
+.field{margin:12px 0}.field label{display:block;color:#c9b98f;font-size:11px;font-weight:750;margin-bottom:7px}.input{width:100%;padding:13px 13px;border:1px solid #45413a;background:#101010;color:#fff;border-radius:11px;outline:none}.input:focus{border-color:var(--gold)}textarea.input{min-height:75px;resize:vertical}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 10px}.tab{white-space:nowrap;border:1px solid var(--line);border-radius:30px;background:var(--surface);color:#bbb;padding:8px 12px;font-size:11px}.tab.active{background:#d8ad5020;color:var(--gold2);border-color:#80652f}
+.status{font-size:10px;font-weight:850;padding:5px 8px;border-radius:20px;white-space:nowrap}.pending{color:#f0c96c;background:#f0c96c19}.approved{color:#67d5a0;background:#67d5a019}.rejected{color:#f08a8a;background:#f08a8a19}
+.empty{padding:25px 14px;text-align:center;border:1px dashed #4b4435;border-radius:14px;color:var(--muted);font-size:12px}
+.bottom-nav{position:fixed;z-index:30;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;padding:9px 4px calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;background:rgba(15,15,15,.97);border-top:1px solid var(--line);backdrop-filter:blur(15px)}
+.nav-btn{border:0;background:none;color:#888;min-width:48px;padding:4px 2px;font-size:9px}.nav-btn .nav-ico{font-size:19px;display:block;margin-bottom:4px}.nav-btn.active{color:var(--gold2)}
+.admin-lock{border:1px solid #755d31;background:#211b10;border-radius:14px;padding:14px;color:#d9c28d;font-size:12px;line-height:1.5}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}.hidden{display:none!important}
+.toast{position:fixed;z-index:60;bottom:105px;left:50%;transform:translateX(-50%);background:#27231b;border:1px solid #80652f;color:#fff;padding:11px 16px;border-radius:12px;font-size:12px;max-width:90%;text-align:center;display:none}
+footer{text-align:center;color:#666;font-size:10px;padding:20px 0 4px}
+@media(min-width:600px){main{padding:22px}.page-title{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">NOVA <span>EARN</span></div>
+  <div class="header-right"><button class="icon-btn" onclick="showPage('support')" aria-label="Support">?</button><div class="avatar" id="avatar">N</div></div>
+</header>
+<main>
+<section class="page active" id="home">
+  <div class="eyebrow">Welcome to NOVA EARN</div>
+  <div class="page-title">ড্যাশবোর্ড <span class="gold">✦</span></div>
+  <div class="hero">
+    <div class="hero-top"><span class="small muted">MY AVAILABLE BALANCE</span><span class="pill">✦ PREMIUM</span></div>
+    <div class="balance-value" id="homeBalance">৳ 0.00</div>
+    <div class="hero-foot">আপনার বর্তমান ব্যালেন্স</div>
+  </div>
+  <div class="grid">
+    <div class="stat"><div class="stat-label">মোট আয়</div><div class="stat-value" id="totalEarn">৳ 0.00</div></div>
+    <div class="stat"><div class="stat-label">মোট রেফার</div><div class="stat-value" id="totalRefs">0</div></div>
+    <div class="stat"><div class="stat-label">সম্পন্ন টাস্ক</div><div class="stat-value" id="totalTasks">0</div></div>
+    <div class="stat"><div class="stat-label">মোট উত্তোলন</div><div class="stat-value" id="totalWithdraw">৳ 0.00</div></div>
+  </div>
+  <div class="section-head"><h3>Quick Access</h3></div>
+  <div class="quick-grid">
+    <button class="quick" onclick="showPage('ads')"><span class="qicon">▶</span><span><b>Watch Ads</b><small>বিজ্ঞাপন দেখে আয়</small></span></button>
+    <button class="quick" onclick="showPage('tasks')"><span class="qicon">▣</span><span><b>Task Center</b><small>টাস্ক সম্পন্ন করুন</small></span></button>
+    <button class="quick" onclick="showPage('referral')"><span class="qicon">♧</span><span><b>Referral</b><small>বন্ধু আমন্ত্রণ</small></span></button>
+    <button class="quick" onclick="showPage('wallet')"><span class="qicon">◈</span><span><b>My Wallet</b><small>ব্যালেন্স ও উত্তোলন</small></span></button>
+  </div>
+  <div class="section-head"><h3>Daily Check-in</h3><span class="pill">DAILY BONUS</span></div>
+  <div class="card"><div class="row"><div><b>আজকের বোনাস</b><div class="muted small">প্রতিদিন একবার চেক-ইন</div></div><button class="btn" disabled>Backend প্রয়োজন</button></div></div>
+  <div class="notice">এটি প্রাথমিক UI ডেমো। প্রকৃত ব্যালেন্স, রিওয়ার্ড, বিজ্ঞাপন যাচাই ও পেমেন্ট চালাতে নিরাপদ সার্ভার/ডেটাবেস সংযোগ প্রয়োজন।</div>
+</section>
+
+<section class="page" id="ads">
+  <div class="eyebrow">Earn Rewards</div><div class="page-title">Watch Ads</div>
+  <div class="card"><div class="row"><b>বিজ্ঞাপন দেখে আয়</b><span class="pill">AD CENTER</span></div><p class="muted small">শুধুমাত্র অনুমোদিত বিজ্ঞাপন নেটওয়ার্কের নীতিমালা মেনে বিজ্ঞাপন দেখানো হবে। Reward কেবল নেটওয়ার্কের বৈধ completion callback সার্ভারে যাচাই হওয়ার পর যোগ হবে।</p><hr><div class="row"><span class="small muted">আজকের বিজ্ঞাপন</span><b>— / —</b></div><div style="height:9px;background:#333;border-radius:10px;margin:10px 0"><div style="width:0;height:9px;background:var(--gold);border-radius:10px"></div></div><button class="btn full" disabled>বিজ্ঞাপন এখনো সংযুক্ত নয়</button></div>
+  <div class="section-head"><h3>Ad History</h3></div><div class="empty">এখনো কোনো বিজ্ঞাপনের রেকর্ড নেই।</div>
+</section>
+
+<section class="page" id="tasks">
+  <div class="eyebrow">Complete & Earn</div><div class="page-title">Task Center</div>
+  <div class="tabs"><button class="tab active" onclick="taskFilter('all',this)">সব</button><button class="tab" onclick="taskFilter('Telegram',this)">Telegram</button><button class="tab" onclick="taskFilter('YouTube',this)">YouTube</button><button class="tab" onclick="taskFilter('Social',this)">Social</button><button class="tab" onclick="taskFilter('Website',this)">Website</button></div>
+  <div id="taskList" class="list"><div class="empty">এখনো কোনো টাস্ক যোগ করা হয়নি। Admin Panel থেকে টাস্ক যোগ হলে এখানে দেখা যাবে।</div></div>
+  <div class="notice">Task submission ও completion সার্ভারে যাচাই না হওয়া পর্যন্ত কোনো Reward দেওয়া হবে না।</div>
+  <div class="section-head"><h3>My Task History</h3></div><div class="empty">কোনো টাস্ক হিস্টোরি নেই।</div>
+</section>
+
+<section class="page" id="referral">
+  <div class="eyebrow">Invite Friends</div><div class="page-title">Referral Program</div>
+  <div class="hero"><div class="small muted">প্রতি সফল রেফারে পুরস্কার</div><div class="balance-value" id="refReward">৳ —</div><div class="hero-foot">রেফারেল রিওয়ার্ড Admin নির্ধারণ করবে</div></div>
+  <div class="field"><label>আপনার Referral Link</label><input class="input" id="refLink" readonly value="Telegram Login ও Backend সংযোগ প্রয়োজন"></div>
+  <button class="btn full" onclick="copyReferral()">লিংক কপি করুন</button>
+  <div class="grid"><div class="stat"><div class="stat-label">মোট Invite</div><div class="stat-value">0</div></div><div class="stat"><div class="stat-label">সফল Referral</div><div class="stat-value">0</div></div><div class="stat"><div class="stat-label">Referral Income</div><div class="stat-value">৳ 0</div></div><div class="stat"><div class="stat-label">Referral Code</div><div class="stat-value" style="font-size:14px">—</div></div></div>
+  <div class="card"><b>কীভাবে কাজ করবে?</b><p class="muted small">নতুন ব্যবহারকারী আপনার Telegram deep link দিয়ে বটে Start করবে এবং অ্যাপে নিবন্ধন সম্পন্ন করবে। সার্ভার Telegram পরিচয় যাচাই করে একবারই referral গণনা করবে।</p></div>
+  <div class="section-head"><h3>Referral History</h3></div><div class="empty">কোনো Referral History নেই।</div>
+</section>
+
+<section class="page" id="wallet">
+  <div class="eyebrow">Your Funds</div><div class="page-title">My Wallet</div>
+  <div class="hero"><div class="small muted">AVAILABLE BALANCE</div><div class="balance-value" id="walletBalance">৳ 0.00</div><div class="hero-foot">সার্ভার যাচাইকৃত ব্যালেন্স এখানে দেখানো হবে</div></div>
+  <div class="section-head"><h3>Withdraw Request</h3><span class="pill">bKash / Nagad</span></div>
+  <div class="card">
+    <div class="field"><label>পেমেন্ট মাধ্যম</label><select class="input" id="paymentMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option></select></div>
+    <div class="field"><label>পেমেন্ট নম্বর</label><input class="input" id="paymentNumber" inputmode="numeric" placeholder="01XXXXXXXXX"></div>
+    <div class="field"><label>উত্তোলনের পরিমাণ (৳)</label><input class="input" id="withdrawAmount" type="number" min="0" placeholder="পরিমাণ লিখুন"></div>
+    <div class="muted small">Minimum withdrawal, fee ও eligibility Admin/Backend থেকে নির্ধারিত হবে।</div>
+    <button class="btn full" style="margin-top:14px" disabled>Withdraw Request — Backend প্রয়োজন</button>
+  </div>
+  <div class="section-head"><h3>Withdraw History</h3></div>
+  <div class="tabs"><button class="tab active">সব</button><button class="tab">Pending</button><button class="tab">Approved</button><button class="tab">Rejected</button></div>
+  <div class="empty">এখনো কোনো Withdraw History নেই।</div>
+  <div class="notice">Pending = অপেক্ষমাণ · Approved = অনুমোদিত/প্রসেস সম্পন্ন · Rejected = বাতিল। পেমেন্ট সফল হয়েছে কি না তা Transaction ID দিয়ে যাচাই করতে হবে।</div>
+</section>
+
+<section class="page" id="support">
+  <div class="eyebrow">We are here to help</div><div class="page-title">Support Center</div>
+  <div class="list">
+    <div class="list-row"><div class="list-icon">✈</div><div class="list-main"><b>Official Telegram Channel</b><small>অফিশিয়াল আপডেট ও ঘোষণা</small></div><span class="reward">↗</span></div>
+    <div class="list-row"><div class="list-icon">🎧</div><div class="list-main"><b>Customer Support</b><small>সাহায্যের জন্য সাপোর্টে যোগাযোগ</small></div><span class="reward">↗</span></div>
+  </div>
+  <div class="notice">Official Channel ও Support-এর আসল URL Admin Panel থেকে সেট করার পর এখানে ক্লিকযোগ্য হবে।</div>
+  <div class="section-head"><h3>Account Information</h3></div><div class="card"><div class="row"><span class="muted small">Telegram Username</span><b id="username">Not connected</b></div><hr><div class="row"><span class="muted small">Telegram User ID</span><b id="telegramId">—</b></div></div>
+</section>
+
+<section class="page" id="admin">
+  <div class="eyebrow">Control Center</div><div class="page-title">Admin Panel</div>
+  <div class="admin-lock">🔒 নিরাপত্তার কারণে Admin Panel কেবল সার্ভার-যাচাইকৃত Admin account-এ চালু হবে। এই HTML ডেমোতে কোনো পাসওয়ার্ড বা Admin privilege নেই।</div>
+  <div class="section-head"><h3>Admin Modules</h3></div>
+  <div class="list">
+    <div class="list-row"><div class="list-icon">👤</div><div class="list-main"><b>User Management</b><small>Username, Telegram ID, balance, status</small></div></div>
+    <div class="list-row"><div class="list-icon">📋</div><div class="list-main"><b>Task Management</b><small>Title, category, URL, reward, limit, verification</small></div></div>
+    <div class="list-row"><div class="list-icon">🤖</div><div class="list-main"><b>Telegram Bot Settings</b><small>Bot username, secure token configuration</small></div></div>
+    <div class="list-row"><div class="list-icon">♧</div><div class="list-main"><b>Referral Settings</b><small>Reward, counts, referral relationships</small></div></div>
+    <div class="list-row"><div class="list-icon">💳</div><div class="list-main"><b>Withdrawal Management</b><small>Pending, approve, reject, transaction reference</small></div></div>
+    <div class="list-row"><div class="list-icon">⚙</div><div class="list-main"><b>App Settings</b><small>Minimum withdrawal, fees, daily limits, support URLs</small></div></div>
+  </div>
+  <div class="notice">পরবর্তী Backend ধাপে এই মডিউলগুলো বাস্তব Database ও Role-Based Access Control দিয়ে চালু করতে হবে।</div>
+</section>
+
+<footer>NOVA EARN · Premium Rewards Interface</footer>
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-page="home" onclick="showPage('home',this)"><span class="nav-ico">⌂</span>Home</button>
+  <button class="nav-btn" data-page="ads" onclick="showPage('ads',this)"><span class="nav-ico">▶</span>Ads</button>
+  <button class="nav-btn" data-page="tasks" onclick="showPage('tasks',this)"><span class="nav-ico">▣</span>Tasks</button>
+  <button class="nav-btn" data-page="referral" onclick="showPage('referral',this)"><span class="nav-ico">♧</span>Refer</button>
+  <button class="nav-btn" data-page="wallet" onclick="showPage('wallet',this)"><span class="nav-ico">◈</span>Wallet</button>
+  <button class="nav-btn" data-page="admin" onclick="showPage('admin',this)"><span class="nav-ico">⚙</span>Admin</button>
+</nav>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+const tg=window.Telegram?.WebApp;
+if(tg){tg.ready();tg.expand();const u=tg.initDataUnsafe?.user;if(u){document.getElementById('avatar').textContent=(u.first_name||'N').charAt(0).toUpperCase();document.getElementById('username').textContent=u.username?'@'+u.username:(u.first_name||'Telegram User');document.getElementById('telegramId').textContent=String(u.id||'—');}}
+function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2400);}
+function copyReferral(){const el=document.getElementById('refLink');if(!el.value||el.value.includes('প্রয়োজন')){toast('Referral link পেতে Backend সংযোগ প্রয়োজন।');return;}navigator.clipboard?.writeText(el.value).then(()=>toast('লিংক কপি হয়েছে।')).catch(()=>toast('কপি করা যায়নি।'));}
+function taskFilter(category,btn){document.querySelectorAll('#tasks .tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}
+</script>
+</body>
+</html>
